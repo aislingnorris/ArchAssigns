@@ -1,0 +1,42 @@
+
+
+
+public p
+p():  add  r26, r27, r10          ; k = i+ j
+      sll  r10, #2, r10           ; k << 2
+      ret  r31, 0                 ; return address + offset
+      sub  r10, #1, r10           ; k -= 1
+
+public q
+q():  add  r9, r0, r10            ; r10 = g
+      call p, r15                 ; return = r25
+      sub  r0, r26, r11           ; r11 = -i
+      ret  r31, 0                 ; return address + offset
+      xor  r0, r0, r0             ; nop
+
+//  int f(int n)
+//  {
+//    if (n > 0) {
+//      return n*f(n-1); // assume a multiply procedure is available
+//    } else {
+//      return 1;
+//    }
+//  }
+
+
+public f
+f():  mov  r10, r9                ; save n
+      sub  r9, #0, r0, {C}        ; if (n > 0)
+      jle  fjump
+      sub  r9, #1, r9             ; n-1
+      push r10
+      call f, r15                 ; f(n -1)
+      mul r9, r10, r9             ;
+      pop  r9
+      ret r31, 0                  ;
+      mov r31, r9                 ; return n
+fjump:ret r31, 0                  ;
+      mov r31, #1                 ; return 1 
+      xor  r0, r0, r0             ; nop
+
+END
